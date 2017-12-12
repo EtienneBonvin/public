@@ -11,13 +11,13 @@ Checkboxes left empty will indicate you did not answer that question, so please 
 
 What is true of a program that gets 100% line coverage during testing?
 
-[] Every line of the program is executed at least once during test execution
+[y] Every line of the program is executed at least once during test execution
 
-[] If all tests passed, the program has no bugs
+[n] If all tests passed, the program has no bugs
 
-[] All of the program’s outputs are checked by the tests
+[n] All of the program’s outputs are checked by the tests
 
-[] It is less likely to contain bugs than an untested program
+[y] It is less likely to contain bugs than an untested program
 
 ### Question 2 [2 points]
 
@@ -31,38 +31,38 @@ public interface A<T> {
 }
 ```
 
-Write your answer here: ____________
+Write your answer here: Iterator
 
 (2.b) In the chosen pattern, what does “`next()`” do, if “`hasNext()`” has just returned false?
 
-[] Crashes
+[n] Crashes
 
-[] Returns the next element
+[n] Returns the next element
 
-[] Returns the same element
+[n] Returns the same element
 
-[] Returns the first element
+[n] Returns the first element
 
-[] Returns the `Default<T>()` value
+[n] Returns the `Default<T>()` value
 
-[] Throws `NoSuchElementException`
+[y] Throws `NoSuchElementException`
 
-[] Throws `InvalidArgumentException`
+[n] Throws `InvalidArgumentException`
 
-[] Throws `ArrayIndexOutOfBoundsException`
+[n] Throws `ArrayIndexOutOfBoundsException`
 
 ### Question 3 [2 points]
 
 You’re designing a data model for a `SantaFactory`, consisting of `Shipper` and `Artisan` objects, both of which are `Elf` objects. 
 What is the correct relationship among these entities?
 
-[] `Shipper` and `Artisan` inherit from `Elf`; `SantaFactory` contains `Artisan` and `Shipper` objects
+[y] `Shipper` and `Artisan` inherit from `Elf`; `SantaFactory` contains `Artisan` and `Shipper` objects
 
-[] `Shipper` inherits from `Elf`; `Artisan` inherits from `Shipper`; `SantaFactory` contains `Artisan` and `Shipper` objects
+[n] `Shipper` inherits from `Elf`; `Artisan` inherits from `Shipper`; `SantaFactory` contains `Artisan` and `Shipper` objects
 
-[] `Elf` inherits from `Artisan`; `Shipper` inherits from `Artisan`; `SantaFactory` contains `Shipper` and `Artisan` objects
+[n] `Elf` inherits from `Artisan`; `Shipper` inherits from `Artisan`; `SantaFactory` contains `Shipper` and `Artisan` objects
 
-[] `Shipper` and `Artisan` inherit from `SantaFactory`
+[n] `Shipper` and `Artisan` inherit from `SantaFactory`
 
 ### Question 4 [3 points]
 
@@ -78,11 +78,11 @@ Suppose someone implements the following maps and provides the following informa
 
 Indicate which statements are true:
 
-[] `IntMap`’s contract makes sense
+[y] `IntMap`’s contract makes sense
 
-[] `EvenIntMap`’s contract makes sense
+[y] `EvenIntMap`’s contract makes sense
 
-[] `OddIntMap`’s contract makes sense
+[y] `OddIntMap`’s contract makes sense
 
 ### Question 5 [7 points]
 
@@ -94,16 +94,16 @@ For each line that violates one or more best practice, add a comment to the code
 
 ```java
 public class RankingSystem {
-  public final int rank;
+  public final int rank; // violation : should not expose internal implementation
   private final List<String> references;
  
   public RankingSystem(int rank, List<String> references) {
       this.rank = rank;
-      this.references = references;
+      this.references = references; // Violation : references is not final, it is likely to change over time. A copy of it should be                                                stored in this.references.
   }
  
   public String getReferenceAt(int position) {
-      return this.references.get(position);
+      return this.references.get(position); // Violation : it should be checked that position is an existing key in the map before                                                          accessing its associated value.
   }
 }
 ```
@@ -115,16 +115,24 @@ Modify the code in-place.
 
 ```java
 public class RankingSystem {
-  public final int rank;
+  private final int rank;
   private final List<String> references;
  
   public RankingSystem(int rank, List<String> references) {
       this.rank = rank;
-      this.references = references;
+      this.references = new ArrayList<>(references);
   }
  
   public String getReferenceAt(int position) {
-      return this.references.get(position);
+      if(references.keySet().contains(position)){
+         return this.references.get(position);
+      }else{
+          throw new IllegalArgumentException("The map does not contain any key with name "+position);
+      }
+  }
+  
+  public int getRank(){
+    return rank;
   }
 }
 ```
@@ -150,11 +158,11 @@ You consider using the MVC pattern and implement a web app with the following wo
 
 Using the information from the above workflow, identify below which elements represent the Model, the Controller, and the View in your MVC architecture. Clearly explain and justify your answers.
 
-Model: ________________
+Model: A backend and a proxy. The client communicates with the backend which will in turn translate and communicate the client's request to the database to offer the client some result.
 
-View: ________________
+View: The website, this is the graphic interface through which the user is able to see the results of his requests.
 
-Controller: ________________
+Controller: The mouse and the keyboard of the user through which he is able to communicate with the backend.
 
 
 ### Question 8 [12 points]
@@ -175,10 +183,10 @@ Also, you would like to leave some freedom to the users of your API (in particul
 Therefore, you decide to drop the inheritance model you used until now, and instead use a SwEng design pattern. 
 Indicate below your choice, and justify clearly and concisely with max 1 sentence each option. Clearly state your assumptions, if any.
 
-[] Adapter
+[n] Adapter
 
-[] Composite
+[y] Composite. The Organization could be considered as a composite of Students. It could maintaint a List of such students and then the creators of the organization are free to create Student with specific roles (of course extending the Student class). As a scheme, one could imagine that Student would be abstract with a method doStuff() to override. Then at a given rate each specialized students could "do their stuff".
 
-[] Decorator
+[n] Decorator
 
-[] Visitor
+[n] Visitor
